@@ -40,7 +40,7 @@ class ColorPickerViewController: UIViewController, UICollectionViewDelegate, UIC
 
 	// This function converts from HTML colors (hex strings of the form '#ffffff') to UIColors
 	func hexStringToUIColor (_ hex:String) -> UIColor {
-		var cString:String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet).uppercased()
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 		
 		if (cString.hasPrefix("#")) {
 			cString = cString.substring(from: cString.characters.index(cString.startIndex, offsetBy: 1))
@@ -68,7 +68,7 @@ class ColorPickerViewController: UIViewController, UICollectionViewDelegate, UIC
 	}
 	// UICollectionViewDataSource Protocol:
 	// Returns the number of columns in collection view
-	internal func numberOfSections(in collectionView: UICollectionView!) -> Int {
+	internal func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 16
 	}
 	// UICollectionViewDataSource Protocol:
@@ -77,13 +77,14 @@ class ColorPickerViewController: UIViewController, UICollectionViewDelegate, UIC
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as UICollectionViewCell
 		cell.backgroundColor = UIColor.clear
-		cell.tag = tag++
+		cell.tag = tag
+        tag = tag + 1
 		
 		return cell
 	}
 	
 	// Recognizes and handles when a collection view cell has been selected
-	internal func collectionView(_ collectionView: UICollectionView!, didSelectItemAt indexPath: IndexPath) {
+	internal func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		
 		var colorPalette: Array<String>
 		

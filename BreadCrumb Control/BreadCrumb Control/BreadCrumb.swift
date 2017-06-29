@@ -263,7 +263,7 @@ class EventItem {
             self.itemPositionClicked = 0
         } else {
             self.itemClicked = titleSelected
-            for ( idx: Int in 0 ..< _items.count) {
+            (0 ..< _items.count).forEach { idx in
                 if (titleSelected == _items[idx]) {
                     self.itemPositionClicked = idx + 1
                 }
@@ -285,8 +285,7 @@ class EventItem {
         
         
         var cx: CGFloat = 0  //kStartButtonWidth
-        for let view: UIView in _itemViews
-        {
+        _itemViews.forEach { view in
             let s: CGSize = view.bounds.size
             view.frame = CGRect(x: cx, y: 0, width: s.width, height: s.height)
             cx += s.width
@@ -315,21 +314,20 @@ class EventItem {
             // comparer with old items search the difference
             var endPosition: CGFloat = 0.0
             var idxToChange: Int = 0
-            for ( idx: Int in 0 ..< _items.count) {
+            (0 ..< _items.count).forEach { idx in
                 if ((idx < items.count) && (_items[idx] == items[idx])) {
                     idxToChange += 1
                     endPosition += _itemViews[idx].frame.width
-                    continue
                 } else {
                     endPosition -= _itemViews[idx].frame.width
                     if (itemsEvolution.count > idx) {
-                    itemsEvolution.insert( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition), at: idxToChange)
+                        itemsEvolution.insert( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition), at: idxToChange)
                     } else {
                         itemsEvolution.append(ItemEvolution( itemLabel: _items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition))
                     }
                 }
             }
-            for ( idx: Int in idxToChange ..< items.count) {
+            (idxToChange ..< items.count).forEach { idx in
                 itemsEvolution.append( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.addItem, offsetX: endPosition))
             }
             
@@ -340,10 +338,10 @@ class EventItem {
             var itemsEvolution: [ItemEvolution] = [ItemEvolution]()
             // comparer with old items search the difference
             let endPosition: CGFloat = 0.0
-            for ( idx: Int in 0 ..< _items.count) {
+            (0 ..< _items.count).forEach { idx in
                 itemsEvolution.append( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition))
             }
-            for ( idx: Int in 0 ..< items.count) {
+            (0 ..< items.count).forEach { idx in
                 itemsEvolution.append( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.addItem, offsetX: endPosition))
             }
             processItem( itemsEvolution, refresh: true)
@@ -355,7 +353,7 @@ class EventItem {
         //    _itemViews
         if (itemsEvolution.count > 0) {
             var itemsEvolutionToSend: [ItemEvolution] = [ItemEvolution]()
-            for ( idx: Int in 1 ..< itemsEvolution.count) {
+            (1 ..< itemsEvolution.count).forEach { idx in
                 itemsEvolutionToSend.append( ItemEvolution( itemLabel: itemsEvolution[idx].itemLabel, operationItem: itemsEvolution[idx].operationItem, offsetX: itemsEvolution[idx].offsetX))
             }
             
@@ -467,8 +465,9 @@ class EventItem {
     
     func receivedUINotificationNewItems(_ notification: Notification){
         let event: AnyObject? = notification.object as AnyObject
-        let eventItems: EventItem? = event as! EventItem
-        processItem( eventItems!.itemsEvolution, refresh: false)
+        if let eventItems = event as? EventItem {
+            processItem( eventItems.itemsEvolution, refresh: false)
+        }
     }
 
     func processIfItemsBreadCrumbInWaiting() {
