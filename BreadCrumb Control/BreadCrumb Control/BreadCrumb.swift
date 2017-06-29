@@ -45,20 +45,20 @@ class EventItem {
     var containerView: UIView!
     var startButton: UIButton!
     
-    var color: UIColor = UIColor.blueColor()
-    private var _animating: Bool = false
+    var color: UIColor = UIColor.blue
+    fileprivate var _animating: Bool = false
    
-    private var animationInProgress: Bool = false
+    fileprivate var animationInProgress: Bool = false
     
     // used if you send a new itemsBreadCrumb when "animationInProgress == true"
-    private var itemsBCInWaiting: Bool = false
+    fileprivate var itemsBCInWaiting: Bool = false
 
     // item selected
     var itemClicked: String!
     var itemPositionClicked: Int = -1
 
     func register() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "receivedUINotificationNewItems:", name:"NotificationNewItems", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(CBreadcrumbControl.receivedUINotificationNewItems(_:)), name:NSNotification.Name(rawValue: "NotificationNewItems"), object: nil)
     }
     
     
@@ -76,25 +76,25 @@ class EventItem {
     }
     
     
-    @IBInspectable var textBCColor: UIColor = UIColor.blackColor() {
+    @IBInspectable var textBCColor: UIColor = UIColor.black {
         didSet{
             initialSetup( true)
         }
     }
     
-    @IBInspectable var backgroundRootButtonColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable var backgroundRootButtonColor: UIColor = UIColor.white {
         didSet{
             initialSetup( true)
         }
     }
     
-    @IBInspectable var backgroundBCColor: UIColor = UIColor.clearColor() {
+    @IBInspectable var backgroundBCColor: UIColor = UIColor.clear {
         didSet{
             initialSetup( true)
         }
     }
     
-    @IBInspectable var itemPrimaryColor: UIColor = UIColor.grayColor() {
+    @IBInspectable var itemPrimaryColor: UIColor = UIColor.gray {
         didSet{
             initialSetup( true)
         }
@@ -114,7 +114,7 @@ class EventItem {
     }
     
     
-    @IBInspectable var arrowColor: UIColor = UIColor.blueColor() {
+    @IBInspectable var arrowColor: UIColor = UIColor.blue {
         didSet{
             //drawRect( self.frame)
             initialSetup( true)
@@ -134,7 +134,7 @@ class EventItem {
         }
     }
     
-    @IBInspectable var iconSize: CGSize = CGSizeMake(20, 20){
+    @IBInspectable var iconSize: CGSize = CGSize(width: 20, height: 20){
         didSet{
             //setNeedsDisplay()
             initialSetup( true)
@@ -156,7 +156,7 @@ class EventItem {
     }
 
     
-    func initialSetup( refresh: Bool) {
+    func initialSetup( _ refresh: Bool) {
         
         var changeRoot: Int = 0
         if ((visibleRootButton) && (self.startButton == nil)) {
@@ -166,9 +166,9 @@ class EventItem {
             changeRoot = 2
         }
         if (self.containerView == nil ) {
-            let rectContainerView: CGRect = CGRectMake( kStartButtonWidth+1, 0, self.bounds.size.width - (kStartButtonWidth+1), kBreadcrumbHeight)
+            let rectContainerView: CGRect = CGRect( x: kStartButtonWidth+1, y: 0, width: self.bounds.size.width - (kStartButtonWidth+1), height: kBreadcrumbHeight)
             self.containerView = UIView(frame:rectContainerView)
-            self.containerView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+            self.containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             
             self.addSubview( self.containerView)
         }
@@ -181,12 +181,12 @@ class EventItem {
         
         if (changeRoot == 1) {
             self.addSubview( self.startButton)
-            let rectContainerView: CGRect = CGRectMake( kStartButtonWidth+1, 0, self.bounds.size.width - (kStartButtonWidth+1), kBreadcrumbHeight)
+            let rectContainerView: CGRect = CGRect( x: kStartButtonWidth+1, y: 0, width: self.bounds.size.width - (kStartButtonWidth+1), height: kBreadcrumbHeight)
             self.containerView.frame = rectContainerView
         } else if (changeRoot == 2) {
             self.startButton.removeFromSuperview()
             self.startButton = nil
-            let rectContainerView: CGRect = CGRectMake( 0, 0, self.bounds.size.width, kBreadcrumbHeight)
+            let rectContainerView: CGRect = CGRect( x: 0, y: 0, width: self.bounds.size.width, height: kBreadcrumbHeight)
             self.containerView.frame = rectContainerView
         }
         
@@ -197,33 +197,33 @@ class EventItem {
 
     func startRootButton() -> UIButton
     {
-        let button: UIButton = UIButton(type: UIButtonType.Custom) as UIButton
+        let button: UIButton = UIButton(type: UIButtonType.custom) as UIButton
         button.backgroundColor = backgroundRootButtonColor
         let bgImage : UIImage = UIImage( named: "button_start.png")!
-        button.setBackgroundImage( bgImage, forState: UIControlState.Normal)
-        button.frame = CGRectMake(0, 0, kStartButtonWidth+1, kBreadcrumbHeight)
-        button.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
+        button.setBackgroundImage( bgImage, for: UIControlState())
+        button.frame = CGRect(x: 0, y: 0, width: kStartButtonWidth+1, height: kBreadcrumbHeight)
+        button.addTarget(self, action: #selector(CBreadcrumbControl.pressed(_:)), for: .touchUpInside)
 
         return button
     }
     
-    func itemButton( item: String, position: Int) -> MyCustomButton
+    func itemButton( _ item: String, position: Int) -> MyCustomButton
     {
         let button: MyCustomButton = MyCustomButton() as MyCustomButton
         if (self.style == .gradientFlatStyle) {
             button.styleButton = .extendButton
-            var rgbValueTmp = CGColorGetComponents(self.itemPrimaryColor.CGColor)
-            var red = rgbValueTmp[0]
-            var green = rgbValueTmp[1]
-            var blue = rgbValueTmp[2]
+            let rgbValueTmp = self.itemPrimaryColor.cgColor.components
+            let red = rgbValueTmp?[0]
+            let green = rgbValueTmp?[1]
+            let blue = rgbValueTmp?[2]
             //var rgbValue: Double = Double(rgbValueTmp)
             //var rgbValue = 0x777777
             //let rPrimary:CGFloat = CGFloat((rgbValue & 0xFF0000) >> 16)/255.0
             //let gPrimary:CGFloat = CGFloat((rgbValue & 0xFF00) >> 8)/255.0
             //let bPrimary:CGFloat = CGFloat((rgbValue & 0xFF))/255.0
-            let rPrimary:CGFloat = CGFloat(red * 255.0)
-            let gPrimary:CGFloat = CGFloat(green * 255.0)
-            let bPrimary:CGFloat = CGFloat(blue * 255.0)
+            let rPrimary:CGFloat = CGFloat(red! * 255.0)
+            let gPrimary:CGFloat = CGFloat(green! * 255.0)
+            let bPrimary:CGFloat = CGFloat(blue! * 255.0)
 
             
             let levelRedPrimaryColor: CGFloat = rPrimary + (self.offsetLastPrimaryColor * CGFloat(position))
@@ -238,38 +238,38 @@ class EventItem {
             button.backgroundCustomColor = self.backgroundBCColor  //self.backgroundItemColor
             button.arrowColor = self.arrowColor
         }
-        button.contentMode = UIViewContentMode.Center
-        button.titleLabel!.font = UIFont.boldSystemFontOfSize(16)
-        button.setTitle(item, forState:UIControlState.Normal)
-        button.setTitleColor( textBCColor, forState: UIControlState.Normal)
+        button.contentMode = UIViewContentMode.center
+        button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 16)
+        button.setTitle(item, for:UIControlState())
+        button.setTitleColor( textBCColor, for: UIControlState())
         button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
         
         button.sizeToFit()
         let rectButton:CGRect = button.frame
         let widthButton: CGFloat = (position > 0) ? rectButton.width + 32 + kBreadcrumbCover : rectButton.width + 32
-        button.frame = CGRectMake(0, 0, widthButton , kBreadcrumbHeight)
+        button.frame = CGRect(x: 0, y: 0, width: widthButton , height: kBreadcrumbHeight)
         button.titleEdgeInsets = (position > 0) ? UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) : UIEdgeInsets(top: 0.0, left: -kBreadcrumbCover, bottom: 0.0, right: 0.0)
-        button.addTarget(self, action: "pressed:", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(CBreadcrumbControl.pressed(_:)), for: .touchUpInside)
         
         return button
     }
     
     
     
-    func pressed(sender: UIButton!) {
+    func pressed(_ sender: UIButton!) {
         let titleSelected = sender.titleLabel?.text
         if ((self.startButton != nil) && (self.startButton == sender)) {
             self.itemClicked = ""
             self.itemPositionClicked = 0
         } else {
             self.itemClicked = titleSelected
-            for ( var idx: Int = 0; idx < _items.count; idx++) {
+            for ( idx: Int in 0 ..< _items.count) {
                 if (titleSelected == _items[idx]) {
                     self.itemPositionClicked = idx + 1
                 }
             }
         }
-        self.sendActionsForControlEvents( UIControlEvents.TouchUpInside)
+        self.sendActions( for: UIControlEvents.touchUpInside)
         
         /*
         let alertView = UIAlertView();
@@ -285,25 +285,25 @@ class EventItem {
         
         
         var cx: CGFloat = 0  //kStartButtonWidth
-        for var view: UIView in _itemViews
+        for let view: UIView in _itemViews
         {
-            var s: CGSize = view.bounds.size
-            view.frame = CGRectMake(cx, 0, s.width, s.height)
+            let s: CGSize = view.bounds.size
+            view.frame = CGRect(x: cx, y: 0, width: s.width, height: s.height)
             cx += s.width
         }
         initialSetup( true)
     }
     
     
-    func singleLayoutSubviews( view: UIView, offsetX: CGFloat) {
+    func singleLayoutSubviews( _ view: UIView, offsetX: CGFloat) {
         super.layoutSubviews()
         
-        var s: CGSize = view.bounds.size
-        view.frame = CGRectMake(offsetX, 0, s.width, s.height)
+        let s: CGSize = view.bounds.size
+        view.frame = CGRect(x: offsetX, y: 0, width: s.width, height: s.height)
     }
     
     
-    func setItems(items: [String], refresh: Bool, containerView: UIView) {
+    func setItems(_ items: [String], refresh: Bool, containerView: UIView) {
         self.animationInProgress = true
 
         if (self._animating) {
@@ -315,21 +315,21 @@ class EventItem {
             // comparer with old items search the difference
             var endPosition: CGFloat = 0.0
             var idxToChange: Int = 0
-            for ( var idx: Int = 0; idx < _items.count; idx++) {
+            for ( idx: Int in 0 ..< _items.count) {
                 if ((idx < items.count) && (_items[idx] == items[idx])) {
-                    idxToChange++
+                    idxToChange += 1
                     endPosition += _itemViews[idx].frame.width
                     continue
                 } else {
                     endPosition -= _itemViews[idx].frame.width
                     if (itemsEvolution.count > idx) {
-                    itemsEvolution.insert( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition), atIndex: idxToChange)
+                    itemsEvolution.insert( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition), at: idxToChange)
                     } else {
                         itemsEvolution.append(ItemEvolution( itemLabel: _items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition))
                     }
                 }
             }
-            for ( var idx: Int = idxToChange; idx < items.count; idx++) {
+            for ( idx: Int in idxToChange ..< items.count) {
                 itemsEvolution.append( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.addItem, offsetX: endPosition))
             }
             
@@ -340,10 +340,10 @@ class EventItem {
             var itemsEvolution: [ItemEvolution] = [ItemEvolution]()
             // comparer with old items search the difference
             let endPosition: CGFloat = 0.0
-            for ( var idx: Int = 0; idx < _items.count; idx++) {
+            for ( idx: Int in 0 ..< _items.count) {
                 itemsEvolution.append( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.removeItem, offsetX: endPosition))
             }
-            for ( var idx: Int = 0; idx < items.count; idx++) {
+            for ( idx: Int in 0 ..< items.count) {
                 itemsEvolution.append( ItemEvolution( itemLabel: items[idx], operationItem: OperatorItem.addItem, offsetX: endPosition))
             }
             processItem( itemsEvolution, refresh: true)
@@ -351,11 +351,11 @@ class EventItem {
     }
     
     
-    func processItem( itemsEvolution: [ItemEvolution], refresh: Bool) {
+    func processItem( _ itemsEvolution: [ItemEvolution], refresh: Bool) {
         //    _itemViews
         if (itemsEvolution.count > 0) {
             var itemsEvolutionToSend: [ItemEvolution] = [ItemEvolution]()
-            for ( var idx: Int = 1; idx < itemsEvolution.count; idx++) {
+            for ( idx: Int in 1 ..< itemsEvolution.count) {
                 itemsEvolutionToSend.append( ItemEvolution( itemLabel: itemsEvolution[idx].itemLabel, operationItem: itemsEvolution[idx].operationItem, offsetX: itemsEvolution[idx].offsetX))
             }
             
@@ -376,12 +376,12 @@ class EventItem {
                 var rectUIButton = itemButton.frame
                 rectUIButton.origin.x = startPosition;
                 itemButton.frame = rectUIButton
-                containerView.insertSubview( itemButton, atIndex: 0)
+                containerView.insertSubview( itemButton, at: 0)
                 _itemViews.append(itemButton)
                 _items.append( label)
 
                 if (!refresh) {
-                    UIView.animateWithDuration( self.animationSpeed, delay: 0, options:[.CurveEaseInOut], animations: {
+                    UIView.animate( withDuration: self.animationSpeed, delay: 0, options:UIViewAnimationOptions(), animations: {
                         self.sizeToFit()
                         self.singleLayoutSubviews( itemButton, offsetX: endPosition)
                         } , completion: { finished in
@@ -391,7 +391,7 @@ class EventItem {
                                 let eventItem: EventItem = EventItem()
                                 eventItem.itemsEvolution = itemsEvolutionToSend
                                 
-                                NSNotificationCenter.defaultCenter().postNotificationName("NotificationNewItems", object: eventItem)
+                                NotificationCenter.default.post(name: Notification.Name(rawValue: "NotificationNewItems"), object: eventItem)
                             } else {
                                 self.processIfItemsBreadCrumbInWaiting()  //self.animationInProgress = false
                             }
@@ -426,7 +426,7 @@ class EventItem {
                 
                 
                 if (!refresh) {
-                    UIView.animateWithDuration( self.animationSpeed, delay: 0, options:[.CurveEaseInOut], animations: {
+                    UIView.animate( withDuration: self.animationSpeed, delay: 0, options:UIViewAnimationOptions(), animations: {
                         self.sizeToFit()
                         self.singleLayoutSubviews( lastViewShowing, offsetX: endPosition)
                         } , completion: { finished in
@@ -441,7 +441,7 @@ class EventItem {
                                 let eventItem: EventItem = EventItem()
                                 eventItem.itemsEvolution = itemsEvolutionToSend
                                 
-                                NSNotificationCenter.defaultCenter().postNotificationName("NotificationNewItems", object: eventItem)
+                                NotificationCenter.default.post(name: Notification.Name(rawValue: "NotificationNewItems"), object: eventItem)
                             } else {
                                 self.processIfItemsBreadCrumbInWaiting()  //self.animationInProgress = false
                             }
@@ -465,8 +465,8 @@ class EventItem {
         }
     }
     
-    func receivedUINotificationNewItems(notification: NSNotification){
-        let event: AnyObject? = notification.object
+    func receivedUINotificationNewItems(_ notification: Notification){
+        let event: AnyObject? = notification.object as AnyObject
         let eventItems: EventItem? = event as! EventItem
         processItem( eventItems!.itemsEvolution, refresh: false)
     }

@@ -230,13 +230,16 @@
 				TargetAttributes = {
 					D01F2E501C02667900967FDA = {
 						CreatedOnToolsVersion = 7.1.1;
+						LastSwiftMigration = 0830;
 					};
 					D01F2E671C02667900967FDA = {
 						CreatedOnToolsVersion = 7.1.1;
+						LastSwiftMigration = 0830;
 						TestTargetID = D01F2E501C02667900967FDA;
 					};
 					D01F2E721C02667900967FDA = {
 						CreatedOnToolsVersion = 7.1.1;
+						LastSwiftMigration = 0830;
 						TestTargetID = D01F2E501C02667900967FDA;
 					};
 				};
@@ -447,6 +450,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "App.Develop.PK.BreadCrumb-Control";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -458,6 +462,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "App.Develop.PK.BreadCrumb-Control";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -469,6 +474,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "App.Develop.PK.BreadCrumb-ControlTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BreadCrumb Control.app/BreadCrumb Control";
 			};
 			name = Debug;
@@ -481,6 +487,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "App.Develop.PK.BreadCrumb-ControlTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BreadCrumb Control.app/BreadCrumb Control";
 			};
 			name = Release;
@@ -492,6 +499,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "App.Develop.PK.BreadCrumb-ControlUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "BreadCrumb Control";
 				USES_XCTRUNNER = YES;
 			};
@@ -504,6 +512,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "App.Develop.PK.BreadCrumb-ControlUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = "BreadCrumb Control";
 				USES_XCTRUNNER = YES;
 			};
